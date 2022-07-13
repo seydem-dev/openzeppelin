@@ -29,9 +29,7 @@ contract TimeLock {
         _;
     }
 
-    receive() external payable {
-
-    }
+    receive() external payable {}
 
     constructor() {
         owner = msg.sender;
