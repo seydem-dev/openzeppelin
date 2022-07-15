@@ -60,3 +60,8 @@ getTransactionId()
 execute()
 ```
 *f*
+
+```
+getTimestamp()
+```
+*f*
