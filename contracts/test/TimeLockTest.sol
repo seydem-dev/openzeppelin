@@ -1,4 +1,4 @@
-contract TestTimeLock {
+contract TimeLockTest {
 
     address public timeLock;
 
