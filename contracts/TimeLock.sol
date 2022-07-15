@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
 
 error NotOwner();
-error AlreadyQueued();
-error TimestampNotInRange();
-error NotQueued();
-error TimestampNotPassed();
-error TimestampExpired();
+error AlreadyQueued(bytes32);
+error TimestampNotInRange(uint256, uint256);
+error NotQueued(bytes32);
+error TimestampNotPassed(uint256, uint256);
+error TimestampExpired(uint256, uint256);
 error TransactionFailed();
 
 pragma solidity ^0.8.0;
@@ -18,9 +18,9 @@ contract TimeLock {
 
     address public immutable owner;
 
-    uint8 public constant MIN_DELAY = 10;
-    uint8 public constant MAX_DELAY = 100;
-    uint8 public constant GRACE_PERIOD = 100;
+    uint256 public constant MIN_DELAY = 10; // DOUBLE CHECK
+    uint256 public constant MAX_DELAY = 1000; // DOUBLE CHECK
+    uint256 public constant GRACE_PERIOD = 1000; // DOUBLE CHECK
 
     mapping(bytes32 => bool) public queued;
 
@@ -29,16 +29,14 @@ contract TimeLock {
         _;
     }
 
-    receive() external payable {}
-
     constructor() {
         owner = msg.sender;
     }
 
     function queue(address target, uint256 amount, string calldata func, bytes calldata data, uint256 timestamp) external onlyOwner {
         bytes32 transactionId = getTransactionId(target, amount, func, data, timestamp);
-        if (queued[transactionId]) revert AlreadyQueued();
-        if (timestamp < block.timestamp + MIN_DELAY || timestamp > block.timestamp + MAX_DELAY) revert TimestampNotInRange();
+        if (queued[transactionId]) revert AlreadyQueued(transactionId);
+        if (timestamp < block.timestamp + MIN_DELAY || timestamp > block.timestamp + MAX_DELAY) revert TimestampNotInRange(block.timestamp, timestamp);
         queued[transactionId] = true;
         emit Queue(target, amount, func, data, timestamp, transactionId);
     }
@@ -49,25 +47,30 @@ contract TimeLock {
 
     function execute(address target, uint256 amount, string calldata func, bytes calldata data, uint256 timestamp) external payable onlyOwner returns (bytes memory) {
         bytes32 transactionId = getTransactionId(target, amount, func, data, timestamp);
-        if (!queued[transactionId]) revert NotQueued();
-        if (block.timestamp < timestamp) revert TimestampNotPassed();
-        if (block.timestamp > timestamp + GRACE_PERIOD) revert TimestampExpired();
+        if (!queued[transactionId]) revert NotQueued(transactionId);
+        if (block.timestamp < timestamp) revert TimestampNotPassed(block.timestamp, timestamp);
+        if (block.timestamp > timestamp + GRACE_PERIOD) revert TimestampExpired(block.timestamp, timestamp + GRACE_PERIOD);
         queued[transactionId] = false;
         bytes memory _data;
-        if (bytes(func).length > 0) {
+        uint256 funcLength = bytes(func).length;
+        if (funcLength > 0) {
             _data = abi.encodePacked(bytes4(keccak256(bytes(func))), data);
         } else {
             _data = data;
         }
-        (bool passed, bytes memory response) = target.call{value: amount}(data);
-        if (!passed) revert TransactionFailed();
+        (bool passed, bytes memory response) = target.call{value: amount}(_data);
+        if (passed) revert TransactionFailed();
         emit Execute(target, amount, func, data, timestamp, transactionId);
         return response;
     }
 
     function cancel(bytes32 transactionId) external onlyOwner {
-        if (!queued[transactionId]) revert NotQueued();
+        if (!queued[transactionId]) revert NotQueued(transactionId);
         queued[transactionId] = false;
         emit Cancel(transactionId);
+    }
+
+    function getTimestamp() external view returns (uint256) {
+        return block.timestamp + 15;
     }
 }
