@@ -1,3 +1,5 @@
+error NotOwner();
+
 contract TimeLockTest {
 
     address public timeLock;
@@ -7,6 +9,6 @@ contract TimeLockTest {
     } 
 
     function test() external {
-        require(msg.sender == timeLock, "Not TimeLock");
+        if (msg.sender != owner) revert NotOwner();
     }
 }
