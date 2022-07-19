@@ -1,10 +1,12 @@
 error NotOwner();
 
-contract TimeLockTest {
+contract TestTimeLock {
 
-    address public timeLock;
+    address public immutable owner;
+    address public immutable timeLock;
 
     constructor(address _timeLock) {
+        owner = msg.sender;
         timeLock = _timeLock;
     } 
 
