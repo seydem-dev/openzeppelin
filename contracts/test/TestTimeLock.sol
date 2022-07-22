@@ -10,7 +10,7 @@ contract TestTimeLock {
         timeLock = _timeLock;
     } 
 
-    function test() external {
+    function test() external view {
         if (msg.sender != owner) revert NotOwner();
     }
 }
