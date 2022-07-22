@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MIT
 
+pragma solidity ^0.8.0;
+
 error NotOwner();
 error AlreadyQueued(bytes32);
 error TimestampNotInRange(uint256, uint256);
@@ -7,8 +9,6 @@ error NotQueued(bytes32);
 error TimestampNotPassed(uint256, uint256);
 error TimestampExpired(uint256, uint256);
 error TransactionFailed();
-
-pragma solidity ^0.8.0;
 
 contract TimeLock {
 
