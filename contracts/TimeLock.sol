@@ -53,11 +53,7 @@ contract TimeLock {
         queued[transactionId] = false;
         bytes memory _data;
         uint256 funcLength = bytes(func).length;
-        if (funcLength > 0) {
-            _data = abi.encodePacked(bytes4(keccak256(bytes(func))), data);
-        } else {
-            _data = data;
-        }
+        funcLength > 0 ? _data = abi.encodePacked(bytes4(keccak256(bytes(func))), data) : _data = data;
         (bool passed, bytes memory response) = target.call{value: amount}(_data);
         if (passed) revert TransactionFailed();
         emit Execute(target, amount, func, data, timestamp, transactionId);
