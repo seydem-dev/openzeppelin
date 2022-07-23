@@ -1,94 +1,84 @@
 # Time Lock
-**Time Lock is a contract commonly used in DeFi and DAOs. The purpose of time lock is to delay a transaction. By queuing a transaction, you have to wait a specific amount of time before the transaction passes which can be extremely reliant in case of an exploit.**
+**Time Lock is a contract commonly used in DeFi and DAOs. The purpose of time lock is to delay a transaction. By queuing a transaction, you have to wait a specific amount of time before the transaction passes which can be extremely convenient in case of an exploit. It can give you some time to secure funds.**
 
 ```
 Queue
 ```
-*f*
+*Fired when transaction is queued.*
 
 ```
 Execute
 ```
-*f*
+*Fired when transaction is executed.*
 
 ```
 Cancel
 ```
-*f*
+*Fired when transaction is canceled.*
 
 ```
 owner
 ```
-*f*
+*Address of contract deployer.*
 
 ```
 MIN_DELAY
 ```
-*f*
+*Required for `timestamp` to be between `MIN_DELAY` and `MAX_DELAY`*
 
 ```
 MAX_DELAY
 ```
-*f*
+*Required for `timestamp` to be between `MIN_DELAY` and `MAX_DELAY`*
 
 ```
 GRACE_PERIOD
 ```
-*f*
+*Time for how long transaction can, after queued, be executed.*
 
 ```
 queued
 ```
-*f*
+*Checks if transaction is queued.*
 
 ```
 onlyOwner
 ```
-*f*
+*Checks if caller is owner, throws if not.*
 
 ```
 queue()
 ```
-*f*
+*Function that queues a transaction. Only callable by owner. Cant queue before minimum delay period and after maximum delay period.*
 
 ```
 getTransactionId()
 ```
-*f*
+*Required to get transaction ID of params for `execute()`*
 
 ```
 execute()
 ```
-*f*
+*Function that executes queued transaction. Execution must take place after given timestamp and before grace period.*
 
 ```
 getTimestamp()
 ```
-*f*
+*Gets current block timestamp + 15 seconds.*
 
 # Test Time Lock
 
 ```
-f
+owner
 ```
-*f*
+*Address of contract deployer.*
 
 ```
-f
+timeLock
 ```
-*f*
+*Main contract: `TimeLock.sol`*
 
 ```
-f
+test()
 ```
-*f*
-
-```
-f
-```
-*f*
-
-```
-f
-```
-*f*
+*Test function*
