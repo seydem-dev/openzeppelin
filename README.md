@@ -76,7 +76,7 @@ owner
 ```
 timeLock
 ```
-*Main contract: `TimeLock.sol`*
+*Address for main contract.`*
 
 ```
 test()
