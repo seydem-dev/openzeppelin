@@ -66,6 +66,11 @@ getTimestamp()
 ```
 *Gets current block timestamp + 15 seconds.*
 
+```
+cancel()
+```
+*Cancels transaction*
+
 # Test Time Lock
 
 ```
