@@ -19,8 +19,8 @@ contract TimeLock {
     address public immutable owner;
 
     uint256 public constant MIN_DELAY = 10;
-    uint256 public constant MAX_DELAY = 1000;
-    uint256 public constant GRACE_PERIOD = 1000;
+    uint256 public constant MAX_DELAY = 10000;
+    uint256 public constant GRACE_PERIOD = 10000;
 
     mapping(bytes32 => bool) public queued;
 
